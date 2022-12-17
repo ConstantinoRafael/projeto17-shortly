@@ -20,9 +20,12 @@
   },
   "homepage": "https://github.com/ConstantinoRafael/projeto17-shortly#readme",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "pg": "^8.8.0"
+    "joi": "^17.7.0",
+    "pg": "^8.8.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
