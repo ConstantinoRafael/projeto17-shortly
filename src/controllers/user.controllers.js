@@ -17,3 +17,20 @@ export async function signUp(req, res) {
     res.status(500).send(err.message);
   }
 }
+
+export async function signIn (req, res) {
+    const user = res.locals.user;
+    const token = uuidv4();
+
+    try {
+        await connectionDB.query(
+            'INSERT INTO sessions (token, "userId") VALUES ($1, $2)',
+            [token, user.id]
+        )
+        res.send({token});
+
+    } catch (err) {
+        console.log(err);
+        res.sendStatus(500);
+    }
+}
