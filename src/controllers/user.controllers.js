@@ -18,19 +18,18 @@ export async function signUp(req, res) {
   }
 }
 
-export async function signIn (req, res) {
-    const user = res.locals.user;
-    const token = uuidv4();
+export async function signIn(req, res) {
+  const user = res.locals.user;
+  const token = uuidv4();
 
-    try {
-        await connectionDB.query(
-            'INSERT INTO sessions (token, "userId") VALUES ($1, $2)',
-            [token, user.id]
-        )
-        res.send({token});
-
-    } catch (err) {
-        console.log(err);
-        res.sendStatus(500);
-    }
+  try {
+    await connectionDB.query(
+      'INSERT INTO sessions (token, "userId") VALUES ($1, $2)',
+      [token, user.id]
+    );
+    res.send({ token });
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
 }
