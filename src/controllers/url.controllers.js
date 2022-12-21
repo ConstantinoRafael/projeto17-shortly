@@ -98,7 +98,7 @@ export async function redirectUrl(req, res) {
 
     const url = rows[0].url;
 
-    console.log(url);
+    console.log(typeof(url))
 
     res.redirect(url);
   } catch (err) {
@@ -109,10 +109,8 @@ export async function redirectUrl(req, res) {
 export async function getRanking(req, res) {
   try {
     const { rows } = await connectionDB.query(
-      'SELECT u.id, u.name, count(s."userId") AS "linksCount",sum(s."visitCount") AS "visitCount" FROM users AS u JOIN shorts AS s ON u.id = s."userId" GROUP by u.id ORDER BY "visitCount" DESC LIMIT 10'
+      'SELECT u.id, u.name, count(s."userId") AS "linksCount", COALESCE(sum(s."visitCount"), 0) AS "visitCount" FROM users AS u LEFT JOIN shorts AS s ON u.id = s."userId" GROUP by u.id ORDER BY "visitCount" DESC LIMIT 10'
     );
-
-    console.log(rows);
 
     res.status(200).send(rows);
   } catch (err) {
