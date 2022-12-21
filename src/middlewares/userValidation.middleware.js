@@ -53,7 +53,7 @@ export async function signInBodyValidation(req, res, next) {
   next();
 }
 
-export async function authenticatadeRouteValidation(req, res, next) {
+export async function authenticatedRouteValidation(req, res, next) {
   const { authorization } = req.headers;
   const token = authorization?.replace("Bearer ", "");
 
@@ -68,8 +68,6 @@ export async function authenticatadeRouteValidation(req, res, next) {
       `SELECT "userId" FROM sessions WHERE token=$1`,
       [tokenSingle]
     );
-
-    console.log(userId.rows[0].userId);
 
     if (userId.rowCount === 0) {
       return res.sendStatus(401);

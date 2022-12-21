@@ -33,3 +33,45 @@ export async function signIn(req, res) {
     res.sendStatus(500);
   }
 }
+
+export async function findShortsUrlsMe(req, res) {
+  const userId = res.locals.userId;
+
+  try {
+    const { rows } = await connectionDB.query(
+      "SELECT id, name FROM users WHERE id = $1",
+      [userId]
+    );
+
+    console.log(rows);
+
+    if (rows.length === 0) {
+      return res.sendStatus(404);
+    }
+
+    const totalVisitCount = await connectionDB.query(
+      'SELECT SUM("visitCount") FROM shorts WHERE "userId" = $1',
+      [userId]
+    );
+
+    //console.log(totalVisitCount.rows[0].sum);
+
+    const shortenedUrls = await connectionDB.query(
+      'SELECT id, url, "shortUrl", "visitCount" FROM shorts WHERE "userId" = $1 ',
+      [userId]
+    );
+
+    //console.log(shortenedUrls.rows);
+
+    const body = {
+      "id": rows[0].id,
+      "name": rows[0].name,
+      "visitCount": totalVisitCount.rows[0].sum,
+      "shortenedUrls": shortenedUrls.rows
+    }
+
+    res.status(200).send(body);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
